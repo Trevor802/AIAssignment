@@ -1,0 +1,6 @@
+framework module AIEngine {
+  umbrella header "AIEngine.h"
+
+  export *
+  module * { export * }
+}

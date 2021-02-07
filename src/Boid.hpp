@@ -8,15 +8,20 @@
 #ifndef Boid_hpp
 #define Boid_hpp
 
-#include <stdio.h>
-#include "Types.h"
-class Boid{
+#include "PhysicsBehavior.hpp"
+using namespace AI;
+
+class Boid : public PhysicsBehavior{
+    typedef PhysicsBehavior Super;
 public:
-    Boid();
     Boid(float, float, float);
-    void Draw();
+    void Update(float) override;
+    
+protected:
+    void DrawImplementation() override;
+    
 private:
-    Rigidbody myRB;
     constexpr static const float kBoidRadius = 20.f;
 };
+
 #endif /* Boid_hpp */

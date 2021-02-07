@@ -6,14 +6,14 @@ ofApp::~ofApp() noexcept {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    float centerX = kWidth * 0.5f, centerY = kHeight * 0.5f;
+    float centerX = 0, centerY = ourHeight;
     float orient = 90.f;
     myBoid = new Boid(centerX, centerY, orient);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    myBoid->Update(ofGetLastFrameTime());
 }
 
 //--------------------------------------------------------------

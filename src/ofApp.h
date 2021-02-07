@@ -2,10 +2,11 @@
 
 #include "ofMain.h"
 #include "Boid.hpp"
+using namespace AI;
 
 class ofApp : public ofBaseApp{
 public:
-    static const int kWidth = 1024, kHeight = 768;
+    static const int ourWidth = 1024, ourHeight = 768;
     
 private:
     Boid* myBoid;
