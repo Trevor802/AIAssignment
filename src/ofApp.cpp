@@ -6,7 +6,7 @@ ofApp::~ofApp() noexcept {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    float centerX = 0, centerY = ourHeight;
+    float centerX = ourWidth * 0.5f, centerY = ourHeight * 0.5f;
     float orient = 90.f;
     myBoid = new Boid(centerX, centerY, orient);
 }
@@ -43,7 +43,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    myBoid->SetDestination({(float)x, (float)y});
 }
 
 //--------------------------------------------------------------

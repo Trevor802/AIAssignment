@@ -6,7 +6,7 @@
 //
 
 #include "PhysicsBehavior.hpp"
-#include "AngleUtils.hpp"
+#include "AngleUtils-inl.hpp"
 
 namespace AI{
 

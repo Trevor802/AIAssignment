@@ -11,7 +11,6 @@
 		C3D37D1925D054C8004A0738 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 		C3D37D1A25D055D0004A0738 /* SceneBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C34FCA2E25CA45AE00BF60C5 /* SceneBehavior.cpp */; };
 		C3D37D1B25D055D5004A0738 /* PhysicsBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3D904EA25CAF53D00D2F469 /* PhysicsBehavior.cpp */; };
-		C3D37D1C25D055DB004A0738 /* AngleUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C374CDAF25CDB7AE00CEDF9A /* AngleUtils.cpp */; };
 		C3D37D2C25D056A9004A0738 /* libgtest_main.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3DBED3125CEDA1A002F42DD /* libgtest_main.a */; };
 		C3D37D2D25D056A9004A0738 /* libgtest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3DBED3225CEDA1A002F42DD /* libgtest.a */; };
 		C3D37D2F25D056CA004A0738 /* AngleUtilsTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3D37D2E25D056CA004A0738 /* AngleUtilsTests.cpp */; };
@@ -44,8 +43,7 @@
 /* Begin PBXFileReference section */
 		C34FCA2E25CA45AE00BF60C5 /* SceneBehavior.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SceneBehavior.cpp; sourceTree = "<group>"; };
 		C34FCA2F25CA45AE00BF60C5 /* SceneBehavior.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SceneBehavior.hpp; sourceTree = "<group>"; };
-		C374CDAF25CDB7AE00CEDF9A /* AngleUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AngleUtils.cpp; sourceTree = "<group>"; };
-		C374CDB025CDB7AE00CEDF9A /* AngleUtils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AngleUtils.hpp; sourceTree = "<group>"; };
+		C374CDB025CDB7AE00CEDF9A /* AngleUtils-inl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "AngleUtils-inl.hpp"; sourceTree = "<group>"; };
 		C375121125C9A906000092F2 /* Boid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Boid.cpp; sourceTree = "<group>"; };
 		C375121225C9A906000092F2 /* Boid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Boid.hpp; sourceTree = "<group>"; };
 		C375121425C9AD11000092F2 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
@@ -283,8 +281,7 @@
 				C34FCA2F25CA45AE00BF60C5 /* SceneBehavior.hpp */,
 				C3D904EA25CAF53D00D2F469 /* PhysicsBehavior.cpp */,
 				C3D904EB25CAF53D00D2F469 /* PhysicsBehavior.hpp */,
-				C374CDAF25CDB7AE00CEDF9A /* AngleUtils.cpp */,
-				C374CDB025CDB7AE00CEDF9A /* AngleUtils.hpp */,
+				C374CDB025CDB7AE00CEDF9A /* AngleUtils-inl.hpp */,
 			);
 			path = Engine;
 			sourceTree = "<group>";
@@ -769,7 +766,6 @@
 				C3D37D1A25D055D0004A0738 /* SceneBehavior.cpp in Sources */,
 				C375121325C9A906000092F2 /* Boid.cpp in Sources */,
 				C3D37D1925D054C8004A0738 /* ofApp.cpp in Sources */,
-				C3D37D1C25D055DB004A0738 /* AngleUtils.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				C3D37D1B25D055D5004A0738 /* PhysicsBehavior.cpp in Sources */,
 			);
@@ -909,6 +905,7 @@
 					"$(OF_CORE_HEADERS)",
 					src,
 					/Users/pascerveau/Downloads/googletest/googletest/include,
+					../Engine,
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -974,6 +971,7 @@
 					"$(OF_CORE_HEADERS)",
 					src,
 					/Users/pascerveau/Downloads/googletest/googletest/include,
+					../Engine,
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -1039,6 +1037,7 @@
 					"$(OF_CORE_HEADERS)",
 					src,
 					/Users/pascerveau/Downloads/googletest/googletest/include,
+					../Engine,
 				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";

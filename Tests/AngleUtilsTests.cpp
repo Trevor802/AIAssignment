@@ -6,7 +6,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "AngleUtils.hpp"
+#include "AngleUtils-inl.hpp"
 
 TEST(AngleUtils, WrapDegrees) {
     float degrees = 90.f;
@@ -94,4 +94,136 @@ TEST(AngleUtils, AngleDiff){
     angleA = -180.f; angleB = 1.f;
     diff = AI::AngleUtils::AngleDiff(angleB, angleA);
     ASSERT_EQ(-179.f, diff);
+}
+
+TEST(AngleUtils, RadiansToDegrees){
+    float deviations = 0.0001f;
+    float radians = 0.f, degrees = 0.f;
+    float result = AI::AngleUtils::RadiansToDegrees(radians);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    radians = AI::AngleUtils::PIf / 4.f; degrees = 45.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 4.f; degrees = -45.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 3.f; degrees = 60.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 6.f; degrees = 30.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 2.f; degrees = 90.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = AI::AngleUtils::PIf; degrees = 180.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = AI::AngleUtils::PIf * 2.f; degrees = 360.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = AI::AngleUtils::PIf * 1.5f; degrees = 270.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 2.f; degrees = -90.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf; degrees = -180.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 3.f; degrees = -60.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 4.f; degrees = -45.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf * 2.f; degrees = -360.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+    
+    radians = -AI::AngleUtils::PIf * 1.5f; degrees = -270.f;
+    ASSERT_LT(fabsf(degrees - AI::AngleUtils::RadiansToDegrees(radians)), deviations);
+}
+
+TEST(AngleUtils, DegreesToRadians){
+    float deviations = 0.0001f;
+    float radians = 0.f, degrees = 0.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 4.f; degrees = 45.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 4.f; degrees = -45.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 3.f; degrees = 60.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 6.f; degrees = 30.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf / 2.f; degrees = 90.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf; degrees = 180.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf * 2.f; degrees = 360.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = AI::AngleUtils::PIf * 1.5f; degrees = 270.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 2.f; degrees = -90.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf; degrees = -180.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 3.f; degrees = -60.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf / 4.f; degrees = -45.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf * 2.f; degrees = -360.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+    
+    radians = -AI::AngleUtils::PIf * 1.5f; degrees = -270.f;
+    ASSERT_LT(fabsf(radians - AI::AngleUtils::DegreesToRadians(degrees)), deviations);
+}
+
+TEST(AngleUtils, Vec2ToAngleInDegrees){
+    float deviations = 0.0001f;
+    float degrees = 0.f;
+    float result = AI::AngleUtils::Vec2ToAngleInDegrees(0.f, 0.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = 45.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(1.f, 1.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = 135.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(-1.f, 1.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = -45.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(1.f, -1.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = -135.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(-1.f, -1.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = -90.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(0.f, -1.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = 90.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(0.f, 1.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
+    
+    degrees = -180.f;
+    result = AI::AngleUtils::Vec2ToAngleInDegrees(-1.f, 0.f);
+    ASSERT_LT(fabsf(degrees - result), deviations);
 }
