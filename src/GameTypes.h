@@ -13,6 +13,7 @@
 struct kinematicOutput{
     ofVec2f velocity;
     float rotation;
+    float maxSpeed;
 };
 
 #endif /* GameTypes_h */

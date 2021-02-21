@@ -7,6 +7,7 @@ using namespace AI;
 class ofApp : public ofBaseApp{
 public:
     static const int ourWidth = 1024, ourHeight = 768;
+    static bool TryWrapAround(ofVec2f&);
     
 private:
     Boid* myBoid;

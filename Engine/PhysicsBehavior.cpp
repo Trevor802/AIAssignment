@@ -10,6 +10,13 @@
 
 namespace AI{
 
+PhysicsBehavior::PhysicsBehavior(){
+    myRigidbody.rotation = 0;
+    myRigidbody.angularAcceleration = 0;
+    myRigidbody.velocity = std::move(ofVec2f::zero());
+    myRigidbody.acceleration = std::move(ofVec2f::zero());
+}
+
 void PhysicsBehavior::Update(float deltaTime) {
     Super::Update(deltaTime);
     myTransform.position += myRigidbody.velocity * deltaTime;

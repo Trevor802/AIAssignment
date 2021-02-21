@@ -18,9 +18,9 @@ void SceneBehavior::Draw(){
     ofPopMatrix();
 }
 
-void SceneBehavior::SetOrientation(float orient){
-    AngleUtils::WrapDegrees(orient);
-    myTransform.orientation = orient;
+void SceneBehavior::SetOrientation(float someDegrees){
+    AngleUtils::WrapDegrees(someDegrees);
+    myTransform.orientation = someDegrees;
 }
 
 }

@@ -4,6 +4,27 @@ ofApp::~ofApp() noexcept {
     delete myBoid;
 }
 
+bool ofApp::TryWrapAround(ofVec2f & aPosition){
+    bool isWrapped = false;
+    if (aPosition.x > ofApp::ourWidth){
+        aPosition.x = 0;
+        isWrapped = true;
+    }
+    else if (aPosition.x < 0){
+        aPosition.x = ofApp::ourWidth;
+        isWrapped = true;
+    }
+    if (aPosition.y > ofApp::ourHeight){
+        aPosition.y = 0;
+        isWrapped = true;
+    }
+    else if (aPosition.y < 0){
+        aPosition.y = ofApp::ourHeight;
+        isWrapped = true;
+    }
+    return isWrapped;
+}
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     float centerX = ourWidth * 0.5f, centerY = ourHeight * 0.5f;

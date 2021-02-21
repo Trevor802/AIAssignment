@@ -60,10 +60,10 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			MRRX8xZiWktKtt6WeRqQzJ5C9CM=
+			49y9ZwcH7ClGicrCVBpWszNBufg=
 			</data>
 			<key>requirement</key>
-			<string>cdhash H"311457f316625a4b4ab6de96791a90cc9e42f423"</string>
+			<string>cdhash H"e3dcbd670707ec294689cac2541a56b33341b9f8"</string>
 		</dict>
 		<key>PlugIns/Tests.xctest.dSYM/Contents/Info.plist</key>
 		<dict>
@@ -80,11 +80,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			EsDf7aCrPzsDCzdogbTdKAfAT5c=
+			Wcf5uVooq9UBcSfDyfArOcBbytM=
 			</data>
 			<key>hash2</key>
 			<data>
-			mbele0JjKWaCobOkqNHFe27ZzrSymkYeSfqpY6qktdg=
+			ocX3gs+c93ULW8HS/QdroT9rOI1ktrpzZsqjzvSo3eY=
 			</data>
 		</dict>
 		<key>Resources/icon.icns</key>

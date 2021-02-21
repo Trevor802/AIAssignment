@@ -14,6 +14,7 @@ namespace AI{
 class PhysicsBehavior : public SceneBehavior{
     typedef SceneBehavior Super;
 public:
+    PhysicsBehavior();
     void Update(float) override;
     inline void SetAcceleration(const ofVec2f& acc) { myRigidbody.acceleration = acc; }
     inline void SetAngularAcc(const float& angularAcc) { myRigidbody.angularAcceleration = angularAcc; }
