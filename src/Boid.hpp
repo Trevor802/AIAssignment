@@ -20,11 +20,12 @@ public:
     
 protected:
     void DrawImplementation() override;
-    void KinematicSeek(float speed, float stopDistance);
-    void KinematicFlee(float speed);
-    void Arrive(float maxSpeed, float slowDistancce, float stopDistance, float maxRotation, float stopAngle);
+    struct kinematicOutput KinematicSeek(float speed, float stopDistance);
+    struct kinematicOutput KinematicFlee(float speed);
+    struct kinematicOutput Arrive(float maxSpeed, float slowDistancce, float stopDistance);
     void DynamicFlee(float acceleration, float rotation);
     void DynamicSeek(float acceleration, float rotation, float accStopDistance);
+    void Align(float targetOrientation, float rotation);
     
 private:
     constexpr static const float kBoidRadius = 20.f;
@@ -32,6 +33,7 @@ private:
     bool hasWrapped = false;
     void WrapAround();
     void ClampSpeed(float maxSpeed);
+    void ApplyKinematic(const struct kinematicOutput& output);
 };
 
 #endif /* Boid_hpp */

@@ -25,14 +25,24 @@ void Boid::DrawImplementation(){
     ofDrawTriangle(halfRadius, -length, kBoidRadius * 2.f, 0, halfRadius, length);
 }
 
+void Boid::ApplyKinematic(const struct kinematicOutput &output){
+    SetVelocity(output.velocity);
+    SetOrientation(output.orientation);
+}
+
 void Boid::Update(float deltaTime){
     Super::Update(deltaTime);
+    kinematicOutput output;
     if (!hasWrapped){
-//        Arrive(500.f, 200.f, 5.f, 300.f, 5.f);
+        output += Arrive(500.f, 200.f, 5.f) *= 0.2f;
+        output += KinematicFlee(100.f) *= 0.8f;
+        output += KinematicSeek(300.f, 5.f) *= 0.1f;
 //        DynamicFlee(1000.f, 300.f);
-        DynamicSeek(500.f, 300.f, 100.f);
+//        DynamicSeek(500.f, 300.f, 100.f);
+//        Align(-135.f, 10.f);
     }
-    ClampSpeed(100.f);
+    ApplyKinematic(output);
+    ClampSpeed(300.f);
     // Wrap around world
     WrapAround();
 }
@@ -42,56 +52,48 @@ void Boid::SetDestination(const ofVec2f & aVector){
     hasWrapped = false;
 }
 
-void Boid::KinematicSeek(float speed, float stopDistance){
+kinematicOutput Boid::KinematicSeek(float speed, float stopDistance){
+    kinematicOutput output;
     ofVec2f vel = myDestination - myTransform.position;
     float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(vel.x, vel.y);
     if (vel.length() > stopDistance){
-        SetVelocity(vel.getNormalized() * speed);
-        SetOrientation(degrees);
+        output.velocity = vel.getNormalized() * speed;
+        output.orientation = degrees;
     }
     else{
-        SetVelocity(ofVec2f::zero());
+        output.velocity = ofVec2f::zero();
     }
+    return output;
 }
 
-void Boid::KinematicFlee(float aSpeed){
+kinematicOutput Boid::KinematicFlee(float aSpeed){
+    kinematicOutput output;
     ofVec2f vel = myTransform.position - myDestination;
     float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(vel.x, vel.y);
-    SetVelocity(vel.getNormalized() * aSpeed);
-    SetOrientation(degrees);
+    output.velocity = vel.getNormalized() * aSpeed;
+    output.orientation = degrees;
+    return output;
 }
 
-void Boid::WrapAround(){
-    ofVec2f pos = GetPosition();
-    if (ofApp::TryWrapAround(pos)){
-        hasWrapped = true;
-        SetRotation(0);
-    }
-    SetPosition(pos);
-}
-
-void Boid::Arrive(float maxSpeed, float slowDistancce, float stopDistance, float rotation, float stopAngle){
+kinematicOutput Boid::Arrive(float maxSpeed, float slowDistancce, float stopDistance){
     assert(slowDistancce > stopDistance);
+    kinematicOutput output;
     ofVec2f vel = myDestination - myTransform.position;
     float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(vel.x, vel.y);
-    float rot = AI::AngleUtils::AngleDiff(degrees, myTransform.orientation);
     float distance = vel.length();
     
     if (distance > slowDistancce){
-        SetVelocity(vel.getNormalized() * maxSpeed);
+        output.velocity = vel.getNormalized() * maxSpeed;
     }
     else if (distance > stopDistance){
         float ratio = (distance - stopDistance) / (slowDistancce - stopDistance);
-        SetVelocity(vel.getNormalized() * maxSpeed * ratio);
+        output.velocity = vel.getNormalized() * maxSpeed * ratio;
     }
     else{
-        SetVelocity(ofVec2f::zero());
+        output.velocity = ofVec2f::zero();
     }
-    
-    if (fabsf(rot) > stopAngle && distance > stopDistance)
-        SetRotation(rot > 0.f ? rotation : -rotation);
-    else
-        SetRotation(0);
+    output.orientation = degrees;
+    return output;
 }
 
 void Boid::DynamicFlee(float acceleration, float rotation){
@@ -110,7 +112,8 @@ void Boid::DynamicFlee(float acceleration, float rotation){
 
 void Boid::ClampSpeed(float maxSpeed){
     ofVec2f velocity = GetVelocity();
-    if (velocity.length() > maxSpeed){
+    ofVec2f acceleration = GetAcceleration();
+    if (velocity.length() > maxSpeed && velocity.dot(acceleration) > 0){
         SetVelocity(velocity.getNormalized() * maxSpeed);
         SetAcceleration(ofVec2f::zero());
     }
@@ -132,4 +135,22 @@ void Boid::DynamicSeek(float acceleration, float rotation, float accStopDistance
         SetAcceleration(direction * acceleration);
     else
         SetAcceleration(ofVec2f::zero());
+}
+
+void Boid::Align(float degrees, float rotation){
+    float rot = AI::AngleUtils::AngleDiff(degrees, myTransform.orientation);
+    rotation *= rot > 0.f ? 1.f : -1.f;
+    if (fabsf(rot) > 5.f)
+        SetRotation(rotation);
+    else
+        SetRotation(0);
+}
+
+void Boid::WrapAround(){
+    ofVec2f pos = GetPosition();
+    if (ofApp::TryWrapAround(pos)){
+        hasWrapped = true;
+        SetRotation(0);
+    }
+    SetPosition(pos);
 }
