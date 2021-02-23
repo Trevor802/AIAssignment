@@ -28,9 +28,20 @@ struct kinematicOutput{
 };
 
 struct dynamicOutput{
-    ofVec2f velocity;
-    ofVec2f acceleration;
-    float rotation;
+    ofVec2f acceleration = ofVec2f::zero();
+    float rotation = 0;
+    
+    inline dynamicOutput operator+=(const dynamicOutput& other){
+        this->rotation += other.rotation;
+        this->acceleration += other.acceleration;
+        return *this;
+    }
+    
+    inline dynamicOutput operator*=(const float& weight){
+        this->rotation *= weight;
+        this->acceleration *= weight;
+        return *this;
+    }
 };
 
 #endif /* GameTypes_h */

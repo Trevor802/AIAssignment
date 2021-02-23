@@ -23,9 +23,9 @@ protected:
     struct kinematicOutput KinematicSeek(float speed, float stopDistance);
     struct kinematicOutput KinematicFlee(float speed);
     struct kinematicOutput Arrive(float maxSpeed, float slowDistancce, float stopDistance);
-    void DynamicFlee(float acceleration, float rotation);
-    void DynamicSeek(float acceleration, float rotation, float accStopDistance);
-    void Align(float targetOrientation, float rotation);
+    struct dynamicOutput DynamicFlee(float acceleration, float rotation);
+    struct dynamicOutput DynamicSeek(float acceleration, float rotation, float accStopDistance);
+    struct dynamicOutput Align(float targetOrientation, float rotation);
     
 private:
     constexpr static const float kBoidRadius = 20.f;
@@ -34,6 +34,7 @@ private:
     void WrapAround();
     void ClampSpeed(float maxSpeed);
     void ApplyKinematic(const struct kinematicOutput& output);
+    void ApplyDynamic(const struct dynamicOutput& output);
 };
 
 #endif /* Boid_hpp */
