@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "AngleUtils-inl.hpp"
 
 ofApp::~ofApp() noexcept {
     delete myBoid;
@@ -28,7 +29,7 @@ bool ofApp::TryWrapAround(ofVec2f & aPosition){
 //--------------------------------------------------------------
 void ofApp::setup(){
     float centerX = ourWidth * 0.5f, centerY = ourHeight * 0.5f;
-    float orient = 90.f;
+    float orient = 72.5f;
     myBoid = new Boid(centerX, centerY, orient);
 }
 
@@ -65,6 +66,10 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     myBoid->SetDestination({(float)x, (float)y});
+    ofVec2f direction = {x - myBoid->GetPosition().x, y - myBoid->GetPosition().y};
+    float orient = AI::AngleUtils::Vec2ToAngleInDegrees((float)x - myBoid->GetPosition().x,
+                                                        (float)y - myBoid->GetPosition().y);
+    myBoid->SetTargetOrientation(orient);
 }
 
 //--------------------------------------------------------------

@@ -17,19 +17,22 @@ public:
     Boid(float, float, float);
     void Update(float) override;
     void SetDestination(const ofVec2f&);
+    void SetTargetOrientation(float);
     
 protected:
     void DrawImplementation() override;
     struct kinematicOutput KinematicSeek(float speed, float stopDistance);
     struct kinematicOutput KinematicFlee(float speed);
     struct kinematicOutput Arrive(float maxSpeed, float slowDistancce, float stopDistance);
-    struct dynamicOutput DynamicFlee(float acceleration, float rotation);
-    struct dynamicOutput DynamicSeek(float acceleration, float rotation, float accStopDistance);
-    struct dynamicOutput Align(float targetOrientation, float rotation);
+    struct kinematicOutput Align(float rotation);
+    struct kinematicOutput Turn(float maxRotation, float slowAngleDiff, float stopAngleDiff);
+    struct dynamicOutput DynamicFlee(float acceleration);
+    struct dynamicOutput DynamicSeek(float timeLeft, float accStopDistance);
     
 private:
     constexpr static const float kBoidRadius = 20.f;
     ofVec2f myDestination;
+    float myTargetOrientation;
     bool hasWrapped = false;
     void WrapAround();
     void ClampSpeed(float maxSpeed);

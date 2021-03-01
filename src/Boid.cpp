@@ -16,6 +16,7 @@ Boid::Boid(float x, float y, float degress){
     SetPosition(ofVec2f(x, y));
     SetOrientation(degress);
     myDestination = myTransform.position;
+    myTargetOrientation = 0;
     SetRotation(0);
 }
 
@@ -27,11 +28,11 @@ void Boid::DrawImplementation(){
 
 void Boid::ApplyKinematic(const struct kinematicOutput &output){
     SetVelocity(output.velocity);
-    SetOrientation(output.orientation);
+    SetRotation(output.rotation);
 }
 
 void Boid::ApplyDynamic(const struct dynamicOutput &output){
-    SetRotation(output.rotation);
+    SetAngularAcc(output.angularAcceleration);
     SetAcceleration(output.acceleration);
 }
 
@@ -40,12 +41,13 @@ void Boid::Update(float deltaTime){
 //    kinematicOutput output;
     dynamicOutput output;
     if (!hasWrapped){
-//        output += Arrive(500.f, 200.f, 5.f) *= 0.2f;
-//        output += KinematicFlee(100.f) *= 0.8f;
-//        output += KinematicSeek(300.f, 5.f) *= 0.1f;
-        output += DynamicFlee(1000.f, 300.f) *= 0.5f;
-        output += DynamicSeek(500.f, 300.f, 100.f) *= 0.3f;
-        output += Align(-135.f, 10.f) *= 0.8f;
+//        output += Arrive(500.f, 200.f, 5.f) *= 1.f;
+//        output += KinematicFlee(100.f) *= 1.f;
+//        output += KinematicSeek(300.f, 5.f) *= 1.f;
+//        output += DynamicFlee(1000.f) *= 1.f;
+        output += DynamicSeek(3.f, 100.f) *= 1.f;
+//        output += Align(90.f) *= 1.f;
+//        output += Turn(180.f, 40.f, 5.f);
     }
 //    ApplyKinematic(output);
     ApplyDynamic(output);
@@ -59,13 +61,15 @@ void Boid::SetDestination(const ofVec2f & aVector){
     hasWrapped = false;
 }
 
+void Boid::SetTargetOrientation(float orientation){
+    myTargetOrientation = orientation;
+}
+
 kinematicOutput Boid::KinematicSeek(float speed, float stopDistance){
     kinematicOutput output;
     ofVec2f vel = myDestination - myTransform.position;
-    float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(vel.x, vel.y);
     if (vel.length() > stopDistance){
         output.velocity = vel.getNormalized() * speed;
-        output.orientation = degrees;
     }
     else{
         output.velocity = ofVec2f::zero();
@@ -76,9 +80,7 @@ kinematicOutput Boid::KinematicSeek(float speed, float stopDistance){
 kinematicOutput Boid::KinematicFlee(float aSpeed){
     kinematicOutput output;
     ofVec2f vel = myTransform.position - myDestination;
-    float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(vel.x, vel.y);
     output.velocity = vel.getNormalized() * aSpeed;
-    output.orientation = degrees;
     return output;
 }
 
@@ -86,7 +88,6 @@ kinematicOutput Boid::Arrive(float maxSpeed, float slowDistancce, float stopDist
     assert(slowDistancce > stopDistance);
     kinematicOutput output;
     ofVec2f vel = myDestination - myTransform.position;
-    float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(vel.x, vel.y);
     float distance = vel.length();
     
     if (distance > slowDistancce){
@@ -99,20 +100,13 @@ kinematicOutput Boid::Arrive(float maxSpeed, float slowDistancce, float stopDist
     else{
         output.velocity = ofVec2f::zero();
     }
-    output.orientation = degrees;
     return output;
 }
 
-dynamicOutput Boid::DynamicFlee(float acceleration, float rotation){
+dynamicOutput Boid::DynamicFlee(float acceleration){
     dynamicOutput output;
     ofVec2f direction = myTransform.position - myDestination;
-    float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(direction.x, direction.y);
-    float rot = AI::AngleUtils::AngleDiff(degrees, myTransform.orientation);
-    rotation *= rot > 0.f ? 1.f : -1.f;
-    output.rotation = fabsf(rot) > 5.f ? rotation : 0;
-    float orientation = myTransform.orientation;
-    AI::AngleUtils::AngleToVec2(orientation, direction.x, direction.y);
-    output.acceleration = direction * acceleration;
+    output.acceleration = direction.getNormalized() * acceleration;
     return output;
 }
 
@@ -125,25 +119,35 @@ void Boid::ClampSpeed(float maxSpeed){
     }
 }
 
-dynamicOutput Boid::DynamicSeek(float acceleration, float rotation, float accStopDistance){
+dynamicOutput Boid::DynamicSeek(float timeLeft, float accStopDistance){
+    assert(timeLeft > 0);
     dynamicOutput output;
     ofVec2f direction = myDestination - myTransform.position;
     bool canAccelerate = direction.length() > accStopDistance;
-    float degrees = AI::AngleUtils::Vec2ToAngleInDegrees(direction.x, direction.y);
-    float rot = AI::AngleUtils::AngleDiff(degrees, myTransform.orientation);
-    rotation *= rot > 0.f ? 1.f : -1.f;
-    output.rotation = fabsf(rot) > 5.f ? rotation : 0;
-    float orientation = myTransform.orientation;
-    AI::AngleUtils::AngleToVec2(orientation, direction.x, direction.y);
-    output.acceleration = canAccelerate ? direction * acceleration : ofVec2f::zero();
+    output.acceleration = canAccelerate ? direction / timeLeft : ofVec2f::zero();
     return output;
 }
 
-dynamicOutput Boid::Align(float degrees, float rotation){
-    dynamicOutput output;
-    float rot = AI::AngleUtils::AngleDiff(degrees, myTransform.orientation);
+kinematicOutput Boid::Align(float rotation){
+    kinematicOutput output;
+    float rot = AI::AngleUtils::AngleDiff(myTargetOrientation, myTransform.orientation);
     rotation *= rot > 0.f ? 1.f : -1.f;
     output.rotation = fabsf(rot) > 5.f ? rotation : 0;
+    return output;
+}
+
+kinematicOutput Boid::Turn(float maxRotation, float slowAngleDiff, float stopAngleDiff){
+    assert(slowAngleDiff > stopAngleDiff);
+    kinematicOutput output;
+    float rot = AI::AngleUtils::AngleDiff(myTargetOrientation, myTransform.orientation);
+    float rotation = rot > 0.f ? maxRotation : -maxRotation;
+    if (fabsf(rot) < slowAngleDiff && fabsf(rot) >= stopAngleDiff){
+        float ratio = (fabsf(rot) - stopAngleDiff) / (slowAngleDiff - stopAngleDiff);
+        rotation *= ratio;
+    }
+    else if (fabsf(rot) < stopAngleDiff)
+        rotation = 0;
+    output.rotation = rotation;
     return output;
 }
 
