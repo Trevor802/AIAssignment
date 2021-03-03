@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Boid.hpp"
+#include "LeaderBoid.hpp"
+#include "FollowerBoid.hpp"
+
 using namespace AI;
 
 class ofApp : public ofBaseApp{
@@ -10,7 +12,8 @@ public:
     static bool TryWrapAround(ofVec2f&);
     
 private:
-    Boid* myBoid;
+    LeaderBoid* myBoidLeader;
+    Boids myBoids;
     
 public:
     virtual ~ofApp() noexcept;
@@ -29,5 +32,8 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+    
+    Boids GetBoids() const;
+    Boid* GetLeader() const;
 		
 };

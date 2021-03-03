@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C375121325C9A906000092F2 /* Boid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C375121125C9A906000092F2 /* Boid.cpp */; };
+		C381923325EE977A00CAD49B /* LeaderBoid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C381923125EE977A00CAD49B /* LeaderBoid.cpp */; };
+		C381923625EE9ABC00CAD49B /* FollowerBoid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C381923425EE9ABC00CAD49B /* FollowerBoid.cpp */; };
 		C3D37D1925D054C8004A0738 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 		C3D37D1A25D055D0004A0738 /* SceneBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C34FCA2E25CA45AE00BF60C5 /* SceneBehavior.cpp */; };
 		C3D37D1B25D055D5004A0738 /* PhysicsBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3D904EA25CAF53D00D2F469 /* PhysicsBehavior.cpp */; };
@@ -47,6 +49,11 @@
 		C375121125C9A906000092F2 /* Boid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Boid.cpp; sourceTree = "<group>"; };
 		C375121225C9A906000092F2 /* Boid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Boid.hpp; sourceTree = "<group>"; };
 		C375121425C9AD11000092F2 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		C381922F25EE595000CAD49B /* FloatUtils-inl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "FloatUtils-inl.hpp"; sourceTree = "<group>"; };
+		C381923125EE977A00CAD49B /* LeaderBoid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LeaderBoid.cpp; sourceTree = "<group>"; };
+		C381923225EE977A00CAD49B /* LeaderBoid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LeaderBoid.hpp; sourceTree = "<group>"; };
+		C381923425EE9ABC00CAD49B /* FollowerBoid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FollowerBoid.cpp; sourceTree = "<group>"; };
+		C381923525EE9ABC00CAD49B /* FollowerBoid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FollowerBoid.hpp; sourceTree = "<group>"; };
 		C3D37D2125D05654004A0738 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3D37D2525D05654004A0738 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3D37D2E25D056CA004A0738 /* AngleUtilsTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AngleUtilsTests.cpp; sourceTree = "<group>"; };
@@ -282,6 +289,7 @@
 				C3D904EA25CAF53D00D2F469 /* PhysicsBehavior.cpp */,
 				C3D904EB25CAF53D00D2F469 /* PhysicsBehavior.hpp */,
 				C374CDB025CDB7AE00CEDF9A /* AngleUtils-inl.hpp */,
+				C381922F25EE595000CAD49B /* FloatUtils-inl.hpp */,
 			);
 			path = Engine;
 			sourceTree = "<group>";
@@ -613,6 +621,10 @@
 				C375121125C9A906000092F2 /* Boid.cpp */,
 				C375121225C9A906000092F2 /* Boid.hpp */,
 				C3D904ED25CB004900D2F469 /* GameTypes.h */,
+				C381923125EE977A00CAD49B /* LeaderBoid.cpp */,
+				C381923225EE977A00CAD49B /* LeaderBoid.hpp */,
+				C381923425EE9ABC00CAD49B /* FollowerBoid.cpp */,
+				C381923525EE9ABC00CAD49B /* FollowerBoid.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -765,9 +777,11 @@
 			files = (
 				C3D37D1A25D055D0004A0738 /* SceneBehavior.cpp in Sources */,
 				C375121325C9A906000092F2 /* Boid.cpp in Sources */,
+				C381923325EE977A00CAD49B /* LeaderBoid.cpp in Sources */,
 				C3D37D1925D054C8004A0738 /* ofApp.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				C3D37D1B25D055D5004A0738 /* PhysicsBehavior.cpp in Sources */,
+				C381923625EE9ABC00CAD49B /* FollowerBoid.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

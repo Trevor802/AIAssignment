@@ -10,17 +10,18 @@
 #include "ofMain.h"
 #include "GameTypes.h"
 #include "AngleUtils-inl.hpp"
+#include "FloatUtils-inl.hpp"
 #include "ofApp.h"
 
 Boid::Boid(float x, float y, float degress){
     SetPosition(ofVec2f(x, y));
     SetOrientation(degress);
-    myDestination = myTransform.position;
-    myTargetOrientation = 0;
+    myClickedPosition = myTransform.position;
     SetRotation(0);
 }
 
 void Boid::DrawImplementation(){
+    ofSetColor(myColor);
     ofDrawCircle(0, 0, kBoidRadius);
     float halfRadius = kBoidRadius * 0.5f, length = halfRadius * sqrt(3);
     ofDrawTriangle(halfRadius, -length, kBoidRadius * 2.f, 0, halfRadius, length);
@@ -38,36 +39,24 @@ void Boid::ApplyDynamic(const struct dynamicOutput &output){
 
 void Boid::Update(float deltaTime){
     Super::Update(deltaTime);
-//    kinematicOutput output;
-    dynamicOutput output;
-    if (!hasWrapped){
-//        output += Arrive(500.f, 200.f, 5.f) *= 1.f;
-//        output += KinematicFlee(100.f) *= 1.f;
-//        output += KinematicSeek(300.f, 5.f) *= 1.f;
-//        output += DynamicFlee(1000.f) *= 1.f;
-        output += DynamicSeek(3.f, 100.f) *= 1.f;
-//        output += Align(90.f) *= 1.f;
-//        output += Turn(180.f, 40.f, 5.f);
+    if (!myHasWrapped){
+        kinematicOutput output;
+        UpdateMovement(output);
+        ApplyKinematic(output);
     }
-//    ApplyKinematic(output);
-    ApplyDynamic(output);
-    ClampSpeed(300.f);
+    ClampSpeed(500.f);
     // Wrap around world
     WrapAround();
 }
 
 void Boid::SetDestination(const ofVec2f & aVector){
-    myDestination = aVector;
-    hasWrapped = false;
+    myClickedPosition = aVector;
+    myHasWrapped = false;
 }
 
-void Boid::SetTargetOrientation(float orientation){
-    myTargetOrientation = orientation;
-}
-
-kinematicOutput Boid::KinematicSeek(float speed, float stopDistance){
+kinematicOutput Boid::KinematicSeek(const ofVec2f& destination, float speed, float stopDistance){
     kinematicOutput output;
-    ofVec2f vel = myDestination - myTransform.position;
+    ofVec2f vel = destination - myTransform.position;
     if (vel.length() > stopDistance){
         output.velocity = vel.getNormalized() * speed;
     }
@@ -77,35 +66,38 @@ kinematicOutput Boid::KinematicSeek(float speed, float stopDistance){
     return output;
 }
 
-kinematicOutput Boid::KinematicFlee(float aSpeed){
+kinematicOutput Boid::KinematicFlee(const ofVec2f& destination, float aSpeed){
     kinematicOutput output;
-    ofVec2f vel = myTransform.position - myDestination;
+    ofVec2f vel = myTransform.position - destination;
     output.velocity = vel.getNormalized() * aSpeed;
     return output;
 }
 
-kinematicOutput Boid::Arrive(float maxSpeed, float slowDistancce, float stopDistance){
+kinematicOutput Boid::Arrive(const ofVec2f& destination, float maxSpeed, float slowDistancce, float stopDistance){
     assert(slowDistancce > stopDistance);
     kinematicOutput output;
-    ofVec2f vel = myDestination - myTransform.position;
+    ofVec2f vel = destination - myTransform.position;
     float distance = vel.length();
+    const float extraDist = 1.f;
     
     if (distance > slowDistancce){
         output.velocity = vel.getNormalized() * maxSpeed;
     }
     else if (distance > stopDistance){
-        float ratio = (distance - stopDistance) / (slowDistancce - stopDistance);
+        float ratio = (distance - stopDistance + extraDist) / (slowDistancce - stopDistance);
         output.velocity = vel.getNormalized() * maxSpeed * ratio;
     }
     else{
         output.velocity = ofVec2f::zero();
+        if (ArrivedCallback)
+            ArrivedCallback();
     }
     return output;
 }
 
-dynamicOutput Boid::DynamicFlee(float acceleration){
+dynamicOutput Boid::DynamicFlee(const ofVec2f& destination, float acceleration){
     dynamicOutput output;
-    ofVec2f direction = myTransform.position - myDestination;
+    ofVec2f direction = myTransform.position - destination;
     output.acceleration = direction.getNormalized() * acceleration;
     return output;
 }
@@ -119,27 +111,18 @@ void Boid::ClampSpeed(float maxSpeed){
     }
 }
 
-dynamicOutput Boid::DynamicSeek(float timeLeft, float accStopDistance){
-    assert(timeLeft > 0);
-    dynamicOutput output;
-    ofVec2f direction = myDestination - myTransform.position;
-    bool canAccelerate = direction.length() > accStopDistance;
-    output.acceleration = canAccelerate ? direction / timeLeft : ofVec2f::zero();
-    return output;
-}
-
-kinematicOutput Boid::Align(float rotation){
+kinematicOutput Boid::Align(float targetOrientation, float rotation){
     kinematicOutput output;
-    float rot = AI::AngleUtils::AngleDiff(myTargetOrientation, myTransform.orientation);
+    float rot = AI::AngleUtils::AngleDiff(targetOrientation, myTransform.orientation);
     rotation *= rot > 0.f ? 1.f : -1.f;
     output.rotation = fabsf(rot) > 5.f ? rotation : 0;
     return output;
 }
 
-kinematicOutput Boid::Turn(float maxRotation, float slowAngleDiff, float stopAngleDiff){
+kinematicOutput Boid::Turn(float targetOrientation, float maxRotation, float slowAngleDiff, float stopAngleDiff){
     assert(slowAngleDiff > stopAngleDiff);
     kinematicOutput output;
-    float rot = AI::AngleUtils::AngleDiff(myTargetOrientation, myTransform.orientation);
+    float rot = AI::AngleUtils::AngleDiff(targetOrientation, myTransform.orientation);
     float rotation = rot > 0.f ? maxRotation : -maxRotation;
     if (fabsf(rot) < slowAngleDiff && fabsf(rot) >= stopAngleDiff){
         float ratio = (fabsf(rot) - stopAngleDiff) / (slowAngleDiff - stopAngleDiff);
@@ -151,11 +134,84 @@ kinematicOutput Boid::Turn(float maxRotation, float slowAngleDiff, float stopAng
     return output;
 }
 
+kinematicOutput Boid::Wander(float maxSpeed, float maxRotation){
+    kinematicOutput output;
+    ofVec2f velocity;
+    AI::AngleUtils::AngleToVec2(GetOrientation(), velocity.x, velocity.y);
+    output.velocity = velocity * maxSpeed;
+    float r = AI::FloatUtils::randomBinomial();
+    output.rotation = r * maxRotation;
+    return output;
+}
+
 void Boid::WrapAround(){
     ofVec2f pos = GetPosition();
-    if (ofApp::TryWrapAround(pos)){
-        hasWrapped = true;
-        SetRotation(0);
-    }
+    myHasWrapped = ofApp::TryWrapAround(pos);
     SetPosition(pos);
+}
+
+Boids Boid::GetAroundBoids(float radius){
+    Boids results;
+    Boids boids = myWorld->GetBoids();
+    for(auto& it : boids){
+        if (this == it)
+            continue;
+        float dist = (GetPosition() - it->GetPosition()).length();
+        if (dist < radius)
+            results.push_back(it);
+    }
+    return results;
+}
+
+kinematicOutput Boid::Separation(const Boids &someBoids, float radius, float maxRepulsion){
+    kinematicOutput output;
+    if (1 == someBoids.size())
+        return output;
+    ofVec2f repulsion;
+    for(auto& it : someBoids){
+        assert(this != it);
+        ofVec2f direction = GetPosition() - it->GetPosition();
+        float ratio = direction.length() / radius;
+        assert(ratio < 1.f);
+        repulsion += (maxRepulsion / (ratio * ratio)) * direction.normalize();
+    }
+    repulsion /= (float)someBoids.size();
+    output.velocity = repulsion;
+    return output;
+}
+
+kinematicOutput Boid::Alignment(const Boids& someBoids, float maxRotation){
+    kinematicOutput output;
+    if (1 == someBoids.size())
+        return output;
+    float alignment;
+    for(auto& it : someBoids){
+        assert(this != it);
+        alignment += it->GetOrientation();
+    }
+    alignment /= (float)someBoids.size();
+    output = Turn(alignment, maxRotation, 15.f, 1.f);
+    return output;
+}
+
+kinematicOutput Boid::Cohesion(const Boids &someBoids, float maxSpeed){
+    kinematicOutput output;
+    if (1 == someBoids.size())
+        return output;
+    ofVec2f cohesion;
+    for(auto& it : someBoids){
+        assert(this != it);
+        cohesion += it->GetPosition();
+    }
+    cohesion /= (float)someBoids.size();
+    output = Arrive(cohesion, 100.f, 10.f, 5.f);
+    return output;
+}
+
+void Boid::SetWorld(class ofApp *theWorld){
+    myWorld = theWorld;
+}
+
+void Boid::SetColor(const ofColor& aColor){
+    myColor = aColor;
 }

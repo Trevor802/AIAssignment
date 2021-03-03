@@ -1,8 +1,23 @@
 #include "ofApp.h"
+#include <time.h>
+#include <stdlib.h>
+
 #include "AngleUtils-inl.hpp"
+#include "FloatUtils-inl.hpp"
 
 ofApp::~ofApp() noexcept {
-    delete myBoid;
+    delete myBoidLeader;
+    for(int i = 0; i < myBoids.size(); ++i){
+        delete myBoids[i];
+    }
+}
+
+Boids ofApp::GetBoids() const {
+    return myBoids;
+}
+
+Boid* ofApp::GetLeader() const {
+    return myBoidLeader;
 }
 
 bool ofApp::TryWrapAround(ofVec2f & aPosition){
@@ -28,19 +43,39 @@ bool ofApp::TryWrapAround(ofVec2f & aPosition){
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    float centerX = ourWidth * 0.5f, centerY = ourHeight * 0.5f;
-    float orient = 72.5f;
-    myBoid = new Boid(centerX, centerY, orient);
+    srand(time(NULL));
+    const float centerX = ourWidth * 0.5f, centerY = ourHeight * 0.5f;
+    const float orient = 72.5f;
+    myBoidLeader = new LeaderBoid(centerX, centerY, orient);
+    myBoidLeader->SetWorld(this);
+    myBoidLeader->SetColor(ofColor(255, 0, 0));
+    
+    const int numBoids = 3;
+    myBoids.resize(numBoids);
+    for(int i = 0; i < numBoids; ++i){
+        const float x = AI::FloatUtils::random() * centerX;
+        const float y = AI::FloatUtils::random() * centerY;
+        myBoids[i] = new FollowerBoid(x, y, 0);
+        myBoids[i]->SetWorld(this);
+        myBoids[i]->SetColor(ofColor(255, 255, 255));
+    }
+    myBoids.size();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    myBoid->Update(ofGetLastFrameTime());
+    myBoidLeader->Update(ofGetLastFrameTime());
+    auto targetPos = myBoidLeader->GetPosition();
+    for(auto it : myBoids){
+        it->Update(ofGetLastFrameTime());
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    myBoid->Draw();
+    myBoidLeader->Draw();
+    for(auto it : myBoids)
+        it->Draw();
 }
 
 //--------------------------------------------------------------
@@ -65,11 +100,8 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    myBoid->SetDestination({(float)x, (float)y});
-    ofVec2f direction = {x - myBoid->GetPosition().x, y - myBoid->GetPosition().y};
-    float orient = AI::AngleUtils::Vec2ToAngleInDegrees((float)x - myBoid->GetPosition().x,
-                                                        (float)y - myBoid->GetPosition().y);
-    myBoid->SetTargetOrientation(orient);
+    myBoidLeader->SetMoveState(LeaderBoid::MoveState::Arrive);
+    myBoidLeader->SetDestination({(float)x, (float)y});
 }
 
 //--------------------------------------------------------------
