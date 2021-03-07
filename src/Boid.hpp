@@ -23,6 +23,7 @@ public:
     void SetDestination(const ofVec2f&);
     void SetWorld(class ofApp* theWorld);
     void SetColor(const ofColor& aColor);
+    static void GetBoidRect(const class Boid&, float&, float&, float&, float&);
     
 protected:
     class ofApp* myWorld;

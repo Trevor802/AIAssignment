@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "LeaderBoid.hpp"
 #include "FollowerBoid.hpp"
+#include "Quadtree.hpp"
 
 using namespace AI;
 
@@ -14,6 +15,7 @@ public:
 private:
     LeaderBoid* myBoidLeader;
     Boids myBoids;
+    Quadtree<Boid, Boid::GetBoidRect>* myQuadtree;
     
 public:
     virtual ~ofApp() noexcept;
@@ -35,5 +37,6 @@ public:
     
     Boids GetBoids() const;
     Boid* GetLeader() const;
-		
+    
+    Boids SearchBoidsByAABB(float, float, float, float) const;
 };

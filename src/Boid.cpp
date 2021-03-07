@@ -152,7 +152,7 @@ void Boid::WrapAround(){
 
 Boids Boid::GetAroundBoids(float radius){
     Boids results;
-    Boids boids = myWorld->GetBoids();
+    Boids boids = myWorld->SearchBoidsByAABB(myTransform.position.x, myTransform.position.y, radius, radius);
     for(auto& it : boids){
         if (this == it)
             continue;
@@ -214,4 +214,11 @@ void Boid::SetWorld(class ofApp *theWorld){
 
 void Boid::SetColor(const ofColor& aColor){
     myColor = aColor;
+}
+
+void Boid::GetBoidRect(const Boid& boid, float& x, float& y, float& w, float& h){
+    x = boid.myTransform.position.x;
+    y = boid.myTransform.position.y;
+    w = 0;
+    h = 0;
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C34C8C1625F3C61800F2D85E /* QuadtreeTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C34C8C1525F3C61800F2D85E /* QuadtreeTests.cpp */; };
 		C375121325C9A906000092F2 /* Boid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C375121125C9A906000092F2 /* Boid.cpp */; };
 		C381923325EE977A00CAD49B /* LeaderBoid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C381923125EE977A00CAD49B /* LeaderBoid.cpp */; };
 		C381923625EE9ABC00CAD49B /* FollowerBoid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C381923425EE9ABC00CAD49B /* FollowerBoid.cpp */; };
@@ -43,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C34C8C1525F3C61800F2D85E /* QuadtreeTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = QuadtreeTests.cpp; sourceTree = "<group>"; };
 		C34FCA2E25CA45AE00BF60C5 /* SceneBehavior.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SceneBehavior.cpp; sourceTree = "<group>"; };
 		C34FCA2F25CA45AE00BF60C5 /* SceneBehavior.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SceneBehavior.hpp; sourceTree = "<group>"; };
 		C374CDB025CDB7AE00CEDF9A /* AngleUtils-inl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "AngleUtils-inl.hpp"; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 		C3DBED3125CEDA1A002F42DD /* libgtest_main.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgtest_main.a; path = ../Downloads/googletest/googletest/build/lib/libgtest_main.a; sourceTree = "<group>"; };
 		C3DBED3225CEDA1A002F42DD /* libgtest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgtest.a; path = ../Downloads/googletest/googletest/build/lib/libgtest.a; sourceTree = "<group>"; };
 		C3DBED4725CEE214002F42DD /* AIAssignmentDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AIAssignmentDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3DD542725F1312B00D43EB3 /* Quadtree.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Quadtree.hpp; sourceTree = "<group>"; };
 		E42962AC2163EDD300A6A9E2 /* ofCamera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ofCamera.cpp; path = ../Downloads/of_v0.11.0_osx_release/libs/openFrameworks/3d/ofCamera.cpp; sourceTree = SOURCE_ROOT; };
 		E42962AD2163EDD300A6A9E2 /* ofMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofMesh.h; path = ../Downloads/of_v0.11.0_osx_release/libs/openFrameworks/3d/ofMesh.h; sourceTree = SOURCE_ROOT; };
 		E42962AE2163EDD300A6A9E2 /* ofNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofNode.h; path = ../Downloads/of_v0.11.0_osx_release/libs/openFrameworks/3d/ofNode.h; sourceTree = SOURCE_ROOT; };
@@ -283,6 +286,7 @@
 		C3D37D1825D05449004A0738 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				C3DD542525F130F900D43EB3 /* Quadtree */,
 				C375121425C9AD11000092F2 /* Types.h */,
 				C34FCA2E25CA45AE00BF60C5 /* SceneBehavior.cpp */,
 				C34FCA2F25CA45AE00BF60C5 /* SceneBehavior.hpp */,
@@ -300,6 +304,7 @@
 				C3D37D3025D05A09004A0738 /* GoogleTests.mm */,
 				C3D37D2525D05654004A0738 /* Info.plist */,
 				C3D37D2E25D056CA004A0738 /* AngleUtilsTests.cpp */,
+				C34C8C1525F3C61800F2D85E /* QuadtreeTests.cpp */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -311,6 +316,14 @@
 				C3DBED3225CEDA1A002F42DD /* libgtest.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C3DD542525F130F900D43EB3 /* Quadtree */ = {
+			isa = PBXGroup;
+			children = (
+				C3DD542725F1312B00D43EB3 /* Quadtree.hpp */,
+			);
+			path = Quadtree;
 			sourceTree = "<group>";
 		};
 		E42962AA2163EDD300A6A9E2 /* openFrameworks */ = {
@@ -766,6 +779,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C34C8C1625F3C61800F2D85E /* QuadtreeTests.cpp in Sources */,
 				C3D37D3125D05A09004A0738 /* GoogleTests.mm in Sources */,
 				C3D37D2F25D056CA004A0738 /* AngleUtilsTests.cpp in Sources */,
 			);

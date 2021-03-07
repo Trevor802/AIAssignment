@@ -7,6 +7,8 @@
 
 ofApp::~ofApp() noexcept {
     delete myBoidLeader;
+    myQuadtree->Clear();
+    delete myQuadtree;
     for(int i = 0; i < myBoids.size(); ++i){
         delete myBoids[i];
     }
@@ -18,6 +20,10 @@ Boids ofApp::GetBoids() const {
 
 Boid* ofApp::GetLeader() const {
     return myBoidLeader;
+}
+
+Boids ofApp::SearchBoidsByAABB(float x, float y, float w, float h) const{
+    return myQuadtree->Search(x, y, w, h);
 }
 
 bool ofApp::TryWrapAround(ofVec2f & aPosition){
@@ -44,13 +50,16 @@ bool ofApp::TryWrapAround(ofVec2f & aPosition){
 //--------------------------------------------------------------
 void ofApp::setup(){
     srand(time(NULL));
+    myQuadtree = new Quadtree<class Boid, Boid::GetBoidRect>;
+    myQuadtree->Setup(ourWidth / 2, ourHeight / 2, ourWidth / 2, ourHeight / 2, 16, 16);
+    
     const float centerX = ourWidth * 0.5f, centerY = ourHeight * 0.5f;
     const float orient = 72.5f;
     myBoidLeader = new LeaderBoid(centerX, centerY, orient);
     myBoidLeader->SetWorld(this);
     myBoidLeader->SetColor(ofColor(255, 0, 0));
     
-    const int numBoids = 3;
+    const int numBoids = 16;
     myBoids.resize(numBoids);
     for(int i = 0; i < numBoids; ++i){
         const float x = AI::FloatUtils::random() * centerX;
@@ -58,6 +67,7 @@ void ofApp::setup(){
         myBoids[i] = new FollowerBoid(x, y, 0);
         myBoids[i]->SetWorld(this);
         myBoids[i]->SetColor(ofColor(255, 255, 255));
+        myQuadtree->Insert(myBoids[i]);
     }
     myBoids.size();
 }
@@ -66,8 +76,11 @@ void ofApp::setup(){
 void ofApp::update(){
     myBoidLeader->Update(ofGetLastFrameTime());
     auto targetPos = myBoidLeader->GetPosition();
+    myQuadtree->Clear();
     for(auto it : myBoids){
         it->Update(ofGetLastFrameTime());
+        bool result = myQuadtree->Insert(it);
+        assert(result);
     }
 }
 
